@@ -1,0 +1,34 @@
+{
+  "name": "node-mutable-bezier",
+  "description": "Mutable object-oriented 2D bezier curves. Suitable for dynamic applications.",
+  "license": "MIT",
+  "version": "0.1.0",
+  "homepage": "https://github.com/rharel/node-mutable-bezier",
+  "author": {
+    "name": "Raoul Harel",
+    "homepage": "https://github.com/rharel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rharel/node-muteable-bezier.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "/LICENSE.txt"
+    }
+  ],
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "mutable",
+    "oop",
+    "bezier",
+    "animation",
+    "dynamic"
+  ]
+}
