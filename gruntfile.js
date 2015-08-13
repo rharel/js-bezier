@@ -1,9 +1,9 @@
-/*
- @author Raoul Harel
- @license The MIT license (LICENSE.txt)
- @copyright 2015 Raoul Harel
- @url rharel/node-gol-hashlife on GitHub
-*/
+/**
+ * @author Raoul Harel
+ * @license The MIT license (LICENSE.txt)
+ * @copyright 2015 Raoul Harel
+ * @url https://github.com/rharel/node-mutable-bezier
+ */
 
 module.exports = function(grunt) {
 
