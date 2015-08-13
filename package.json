@@ -1,6 +1,6 @@
 {
   "name": "node-mutable-bezier",
-  "description": "Mutable object-oriented 2D bezier curves. Suitable for dynamic applications.",
+  "description": "Mutable object-oriented 2D bezier curves for dynamic applications.",
   "license": "MIT",
   "version": "0.1.0",
   "homepage": "https://github.com/rharel/node-mutable-bezier",
@@ -20,8 +20,15 @@
   ],
   "devDependencies": {
     "chai": "^3.2.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-mocha-cli": "^1.14.0",
+    "load-grunt-tasks": "^3.2.0",
     "mocha": "^2.2.5"
   },
+  "dependencies": {},
   "scripts": {
     "test": "grunt test"
   },
