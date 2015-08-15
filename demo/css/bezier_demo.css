@@ -1,0 +1,26 @@
+/**
+ * @author Raoul Harel
+ * @license The MIT license (LICENSE.txt)
+ * @copyright 2015 Raoul Harel
+ * @url https://github.com/rharel/js-bezier
+ */
+
+body {
+    background-color: lightyellow;
+    overflow: hidden;
+}
+
+label {
+    display: inline;
+    white-space: nowrap;
+}
+
+.options-row {
+    background-color: lightblue;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#reset-button {
+    margin-top: 10px;
+}
