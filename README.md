@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/rharel/js-bezier.svg)](https://travis-ci.org/rharel/js-bezier)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com)
 
 ## Installation
