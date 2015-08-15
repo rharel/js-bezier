@@ -43,4 +43,4 @@ Check out some interactive fun at the [demo/](demo/) !
 
 ## License
 
-This software is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more information.
+This software is licensed under the **MIT License**. See the [LICENSE](LICENSE.txt) file for more information.
