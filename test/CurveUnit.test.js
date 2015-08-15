@@ -2,7 +2,7 @@
  * @author Raoul Harel
  * @license The MIT license (LICENSE.txt)
  * @copyright 2015 Raoul Harel
- * @url https://github.com/rharel/node-mutable-bezier
+ * @url https://github.com/rharel/js-bezier
  */
 
 var expect = require('chai').expect;
@@ -17,7 +17,7 @@ describe('curve', function() {
     });
 
     it('should create an empty curve by default', function () {
-      expect(c.degree).to.be.equal(0);
+      expect(c.complexity).to.be.equal(0);
     });
   });
 
@@ -32,8 +32,8 @@ describe('curve', function() {
       c = new Curve(p);
     });
 
-    it('should have the same degree as the array\'s length', function() {
-      expect(c.degree).to.be.equal(p.length);
+    it('should have the same complexity as the array\'s length', function() {
+      expect(c.complexity).to.be.equal(p.length);
     });
     it('should populate control points from the array', function() {
       for (var i = 0; i < p.length; ++i) {
@@ -62,8 +62,8 @@ describe('curve', function() {
       expect(q.x).to.be.equal(b.x);
       expect(q.y).to.be.equal(b.y);
     });
-    it('should increment curve degree', function() {
-      expect(c.degree).to.be.equal(2);
+    it('should increment curve complexity', function() {
+      expect(c.complexity).to.be.equal(2);
     });
     it('should add new control points in order', function() {
       var p = c.getControlPoint(0);
@@ -184,7 +184,7 @@ describe('curve', function() {
   describe('evaluation', function() {
     describe('for empty curve', function() {
       var c;
-      beforeEach('create normal and matrix curves', function() {
+      beforeEach('create curve', function() {
         c = new Curve();
       });
 
@@ -197,21 +197,23 @@ describe('curve', function() {
 
     describe('for single point curve', function() {
       var p, c;
-      beforeEach('create normal and matrix curves', function() {
+      beforeEach('create normal curve', function() {
         p = {x: 0, y: 0};
         c = new Curve([p]);
       });
 
       it('should always evaluate to the control point', function() {
         [-1, 0, 1, 2, 0.5].forEach(function(t) {
-          expect(c.at(t).x).to.be.equal(p.x);
+          var q = c.at(t);
+          expect(q.x).to.be.equal(p.x);
+          expect(q.y).to.be.equal(p.y);
         });
       });
     });
 
     describe('for linear curve', function() {
       var p, c;
-      beforeEach('create normal and matrix curves', function() {
+      beforeEach('create curve', function() {
         p = [
           {x: 0, y: 0},
           {x: 1, y: 1}
@@ -221,15 +223,17 @@ describe('curve', function() {
 
       it('should evaluate to start-point when t <= 0', function() {
         [-1, 0].forEach(function(t) {
-          expect(c.at(t).x).to.be.equal(p[0].x);
-          expect(c.at(t).y).to.be.equal(p[0].y);
+          var q = c.at(t);
+          expect(q.x).to.be.equal(p[0].x);
+          expect(q.y).to.be.equal(p[0].y);
         });
       });
 
       it('should evaluate to end-point when t >= 1', function() {
         [1, 2].forEach(function(t) {
-          expect(c.at(t).x).to.be.equal(p[1].x);
-          expect(c.at(t).y).to.be.equal(p[1].y);
+          var q = c.at(t);
+          expect(q.x).to.be.equal(p[1].x);
+          expect(q.y).to.be.equal(p[1].y);
         });
       });
 
@@ -242,7 +246,7 @@ describe('curve', function() {
 
     describe('for quadratic curve', function() {
       var p, c;
-      beforeEach('create normal and matrix curves', function() {
+      beforeEach('create curve', function() {
         p = [
           {x: 0, y: 0},
           {x: 1, y: 1},
@@ -253,15 +257,17 @@ describe('curve', function() {
 
       it('should evaluate to start-point when t <= 0', function() {
         [-1, 0].forEach(function(t) {
-          expect(c.at(t).x).to.be.equal(p[0].x);
-          expect(c.at(t).y).to.be.equal(p[0].y);
+          var q = c.at(t);
+          expect(q.x).to.be.equal(p[0].x);
+          expect(q.y).to.be.equal(p[0].y);
         });
       });
 
       it('should evaluate to end-point when t >= 1', function() {
         [1, 2].forEach(function(t) {
-          expect(c.at(t).x).to.be.equal(p[2].x);
-          expect(c.at(t).y).to.be.equal(p[2].y);
+          var q = c.at(t);
+          expect(q.x).to.be.equal(p[2].x);
+          expect(q.y).to.be.equal(p[2].y);
         });
       });
 
@@ -310,9 +316,9 @@ describe('curve', function() {
         s = c.getSkeleton(0, 1, 0.01);
       });
 
-      it('should have length of 2', function() {
+      it('should have length of (1 / precision + 1)', function() {
           var s = c.getSkeleton(0, 1, 0.01);
-          expect(s.length).to.be.equal(2);
+          expect(s.length).to.be.equal(101);
       });
     });
 
@@ -327,16 +333,10 @@ describe('curve', function() {
         c = new Curve(p);
       });
 
-      it('should have length of (1 / resolution + 1) [non-adaptive]',
+      it('should have length of (1 / precision + 1)',
         function() {
           var s = c.getSkeleton(0, 1, 0.01);
           expect(s.length).to.be.equal(101);
-      });
-
-      it('should have length of 2 [adaptive]',
-        function() {
-          var s = c.getSkeleton(0, 1, 0.01, true);
-          expect(s.length).to.be.equal(2);
       });
     });
   });
