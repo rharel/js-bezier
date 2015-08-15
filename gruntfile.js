@@ -2,7 +2,7 @@
  * @author Raoul Harel
  * @license The MIT license (LICENSE.txt)
  * @copyright 2015 Raoul Harel
- * @url https://github.com/rharel/node-mutable-bezier
+ * @url https://github.com/rharel/js-bezier
  */
 
 module.exports = function(grunt) {
@@ -12,11 +12,15 @@ module.exports = function(grunt) {
     lib_dir: 'lib/',
     test_dir: 'test/',
     dist_dir: 'dist/',
+    demo_dir: 'demo/',
     source_files: [ '<%= lib_dir %>**/*.js' ],
     test_files: '<%= test_dir %>**/*.test.js',
 
     jshint: {
-      all: '<%= lib_dir %>**/*.js'
+      all: [
+        '<%= lib_dir %>**/*.js',
+        '<%= demo_dir %>/js/*.js'
+      ]
     },
 
     clean: {
