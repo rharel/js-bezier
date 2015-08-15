@@ -1,9 +1,9 @@
 {
-  "name": "node-mutable-bezier",
+  "name": "js-bezier",
   "description": "Mutable object-oriented 2D bezier curves for dynamic applications.",
   "license": "MIT",
   "version": "0.1.0",
-  "homepage": "https://github.com/rharel/node-mutable-bezier",
+  "homepage": "https://github.com/rharel/js-bezier",
   "author": {
     "name": "Raoul Harel",
     "homepage": "https://github.com/rharel"
