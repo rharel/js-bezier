@@ -1,0 +1,23 @@
+{
+  "name": "js-bezier",
+  "version": "0.1.0",
+  "authors": [
+    "Raoul Harel <raoulhaa@gmail.com>"
+  ],
+  "description": "Interactive bezier demo for the browser.",
+  "main": "lib/bezier.js",
+  "keywords": [
+    "bezier",
+    "animation",
+    "dynamic"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/rharel/js-bezier",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
