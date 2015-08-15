@@ -11,7 +11,7 @@ function ControlPoint(model, _2d, parentSize) {
   this.defaultColor = 'dodgerblue';
   this.dragColor = 'lightblue';
 
-  this.graphic = _2d.makeCircle(model.x, model.y, 15);;
+  this.graphic = _2d.makeCircle(model.x, model.y, 15);
   this.graphic.fill = 'black';
   this.graphic.linewidth = 0;
   this.graphic.fill = this.defaultColor;
@@ -51,8 +51,9 @@ ControlPoint.prototype = {
 
   contains: function(x, y) {
     return (
-      Math.sqrt(Math.pow(x - this.getX(), 2) + Math.pow(y - this.getY(), 2))
-      < this.haloRadius
+      Math.sqrt(
+        Math.pow(x - this.getX(), 2) +
+        Math.pow(y - this.getY(), 2)) < this.haloRadius
     );
   },
 

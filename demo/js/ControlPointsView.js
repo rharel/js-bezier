@@ -118,7 +118,7 @@ ControlPointsView.prototype = {
     }
     else if (this._selected !== null) {
       this._selected.onDragStop();
-      this._invoke(this._dragStopCallbacks)
+      this._invoke(this._dragStopCallbacks);
     }
   },
 
