@@ -1,6 +1,6 @@
 {
   "name": "js-bezier",
-  "description": "Mutable object-oriented 2D bezier curves for dynamic applications.",
+  "description": "Interactive bezier demo for the browser.",
   "license": "MIT",
   "version": "0.1.0",
   "homepage": "https://github.com/rharel/js-bezier",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rharel/node-muteable-bezier.git"
+    "url": "https://github.com/rharel/js-bezier.git"
   },
   "licenses": [
     {
@@ -33,7 +33,6 @@
     "test": "grunt test"
   },
   "keywords": [
-    "mutable",
     "bezier",
     "animation",
     "dynamic"
