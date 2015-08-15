@@ -40,6 +40,13 @@ module.exports = function(grunt) {
       all: '<%= test_dir %>/*.test.js'
     },
 
+    copy: {
+      release: {
+        src: '<%= lib_dir %>/bezier.js',
+        dest: '<%= dist_dir %>/bezier.js'
+      }
+    },
+
     uglify: {
       release: {
         files: {
@@ -51,7 +58,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'clean:release',
-    'uglify:release'
+    'uglify:release',
+    'copy:release'
   ]);
   grunt.registerTask('test', ['mochacli:all']);
   grunt.registerTask('dev', [
@@ -62,7 +70,8 @@ module.exports = function(grunt) {
     'jshint:all',
     'test',
     'clean:release',
-    'uglify:release'
+    'uglify:release',
+    'copy:release'
   ]);
   grunt.registerTask('default', 'dev');
 
