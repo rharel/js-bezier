@@ -1,0 +1,8 @@
+# Editor
+
+.idea/
+
+# Package managers
+
+node_modules/
+bower_components/

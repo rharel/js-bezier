@@ -1,0 +1,28 @@
+{
+  "name": "js-bezier-demo",
+  "version": "1.0.0",
+  "authors": [
+    "Raoul Harel <raoulhaa@gmail.com>"
+  ],
+  "description": "Demo for github.com/rharel/js-bezier",
+  "keywords": [
+    "bezier",
+    "animation",
+    "demo"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/rharel/js-bezier",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5",
+    "bootstrap-slider": "*",
+    "tweenjs": "*",
+    "two": "~0.4.0"
+  }
+}
