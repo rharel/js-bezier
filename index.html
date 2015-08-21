@@ -11,67 +11,275 @@
 <head>
   <meta charset="UTF-8">
 
-  <!-- 3rd party -->
-  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
-  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
-  <link rel="stylesheet" href="css/3rd/bootstrap-slider.min.css">
-  <script src="js/3rd/bootstrap-slider.min.js"></script>
-  <script src="js/3rd/two.min.js"></script>
-  <script src="js/3rd/tween.min.js"></script>
+  <title>Bezier Curves Interactive Demo</title>
 
-  <!-- local -->
-  <link rel="stylesheet" href="css/bezier_demo.css">
-  <script src="../src/bezier.js"></script>
+  <!-- css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
+  <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/css/bootstrap-slider.css">
+  <link rel="stylesheet" href="bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css">
+
+  <link rel="stylesheet" href="css/demo.css">
+
+  <!-- js -->
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
+  <script src="bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+
+  <script src="bower_components/tweenjs/build/tween.min.js"></script>
+
+  <script src="bower_components/two/build/two.min.js"></script>
+
+  <script src="bower_components/js-bezier/dist/bezier.js"></script>
+
+  <script src="js/MouseHandler.js"></script>
+  <script src="js/Layer.js"></script>
+  <script src="js/OutlineLayer.js"></script>
+  <script src="js/ShellLayer.js"></script>
   <script src="js/AutoPlayer.js"></script>
   <script src="js/ControlPoint.js"></script>
-  <script src="js/ControlPointsView.js"></script>
-  <script src="js/Layer.js"></script>
-  <script src="js/MouseHandler.js"></script>
-  <script src="js/ShellView.js"></script>
-  <script src="js/SkeletonView.js"></script>
-  <script src="js/demo.js"></script>
+  <script src="js/Plot.js"></script>
+  <!--<script src="js/demo2.js"></script>-->
 
-  <title>Bezier Curves Interactive Demo</title>
+  <script>
+
+    $(document).ready(function() {
+
+      var $canvas = $('#demo-canvas');
+      var plot = new Plot($canvas);
+
+      // autoplay //
+
+      var $autoplayToggle = $('#autoplay-toggle');
+
+      var fps = 30;
+      var cycleDuration = 4;  // seconds
+
+      var autoPlayer = new AutoPlayer(
+        {
+          get: function() { return $timeSlider.slider('getValue'); },
+          set: function(value) {
+            $timeSlider.slider('setValue', value, true, true);
+          }
+        },
+        1000 / fps,
+        1 / (cycleDuration * fps)
+      );
+
+      function updateAutoplay() {
+
+        if ($autoplayToggle.prop('checked')) {
+          autoPlayer.play();
+        }
+        else { autoPlayer.stop(); }
+      }
+
+      $autoplayToggle.change(updateAutoplay);
+
+      // resizing //
+
+      function resize() {
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        $canvas.width(w);
+        $canvas.height(h);
+
+        plot.resize(w, h);
+
+        requestAnimationFrame(plot.refresh.bind(plot));
+      }
+
+      $(window).resize(resize);
+
+      // time //
+
+      var $timeSlider = $('#time-slider');
+
+      $timeSlider.slider({
+        min: 0,
+        max: 1,
+        step: 0.001,
+        tooltip_position: 'bottom'
+      });
+
+      $timeSlider.change(function () {
+
+        requestAnimationFrame(function() {
+          plot.t = $timeSlider.slider('getValue');
+        });
+      });
+
+      // mouse interaction //
+
+      (function() {
+
+        var mouse = new MouseHandler($canvas);
+        var selected = null;
+
+        var defaultColor = 'dodgerblue';
+        var hoverColor = 'lightblue';
+
+        var defaultPrecision = 0.01;
+        var dragPrecision = 0.1;
+
+        $canvas.mousemove(function() {
+
+          if (mouse.dragging && selected !== null) {  // drag
+
+            if (plot.precision !== dragPrecision) {
+              plot.precision = dragPrecision;
+            }
+
+            selected.x += mouse.dx;
+            selected.y += mouse.dy;
+
+            requestAnimationFrame(plot.refresh.bind(plot));
+          }
+
+          else {  // hover
+
+            var controlPoint = plot.pointCast(mouse.x, mouse.y);
+
+            if (controlPoint !== null && selected === null) {
+
+              selected = controlPoint;
+              selected.color = hoverColor;
+            }
+            else if (controlPoint === null && selected !== null) {
+
+              selected.color = defaultColor;
+              selected = null;
+            }
+          }
+
+        });
+
+        $canvas.mouseup(function() {
+
+          if (plot.precision !== defaultPrecision) {
+            plot.precision = defaultPrecision;
+          }
+        });
+
+        $canvas.click(function() {
+
+          if (selected === null) {
+            plot.add(mouse.x, mouse.y);
+          }
+        });
+
+      })();
+
+      // layer visibility //
+
+      var $pointsToggleButton = $('#points-toggle');
+
+      function updatePointsVisibility() {
+
+        plot.control.visible = $pointsToggleButton.prop('checked');
+        plot.render();
+      }
+
+      updatePointsVisibility();
+
+      $pointsToggleButton.change(updatePointsVisibility);
+
+      var $shellToggleButton = $('#shell-toggle');
+
+      function updateShellVisibility() {
+
+        plot.shell.visible = $shellToggleButton.prop('checked');
+        plot.render();
+      }
+
+      updateShellVisibility();
+
+      $shellToggleButton.change(updateShellVisibility);
+
+      // resetting //
+
+      var $resetButton = $('#reset-button');
+
+      function reset() {
+
+        //autoPlayer.stop();
+        $autoplayToggle.bootstrapToggle('off');
+
+        plot.clear();
+
+        plot.add($canvas.width() * 0.25, $canvas.height() * 0.5);
+        plot.add($canvas.width() * 0.5, $canvas.height() * 0.75);
+        plot.add($canvas.width() * 0.75, $canvas.height() * 0.5);
+
+        $timeSlider.slider('setValue', 1, true, true);
+        plot.t = 1;
+
+        //plot.render();
+      }
+
+      $resetButton.click(reset);
+
+      // kickstart //
+
+      resize();
+      reset();
+
+      updateAutoplay();
+
+    });
+  </script>
 </head>
 <body>
-  <div class="row options-row">
-    <div class="col-md-3 text-center">
-      <button id="reset-button" class="btn btn-default">
+
+  <div id="controls">
+    <div id="main-controls">
+      <button id="reset-button" class="btn btn-primary">
         Reset
       </button>
-    </div>
-    <div class="col-md-3">
-      <label class="checkbox">
-        Control Points
-        <input id="cp-toggle-button" type="checkbox" data-toggle="toggle"
-               checked>
-      </label>
-    </div>
-    <div class="col-md-3">
-      <label class="checkbox">
-        Shell
-        <input id="shell-toggle-button" type="checkbox" data-toggle="toggle">
-      </label>
-    </div>
-    <div class="col-md-3">
-      <label class="checkbox">
-        Autoplay
-        <input id="autoplay-toggle-button" type="checkbox" data-toggle="toggle">
-      </label>
-    </div>
-  </div>
-  <div class="row options-row text-center">
       <label>
+        <input id="points-toggle"
+               type="checkbox" checked
+               data-toggle="toggle"
+               data-on="Points On" data-off="Points Off">
+      </label>
+      <label>
+        <input id="shell-toggle"
+               type="checkbox" checked
+               data-toggle="toggle"
+               data-on="Shell  On" data-off="Shell Off">
+      </label>
+      <label>
+        <input id="autoplay-toggle"
+               type="checkbox"
+               data-toggle="toggle"
+               data-on="Autoplay On" data-off="Autoplay Off">
+      </label>
+
+      <a class="btn btn-success" href="https://github.com/rharel/js-bezier">View on Github</a>
+    </div>
+
+    <div id="slider-controls">
+      <label class="h3">
+         Time:
         <input id="time-slider" type="text">
       </label>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <svg id="sandbox"></svg>
     </div>
+
+    <div id="instructions" class="alert alert-info">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      Click to add points, drag to change their position.
+    </div>
+  </div>
+
+  <svg id="demo-canvas"></svg>
+
+  <div id="about">
+    Author: Raoul Harel
   </div>
 </body>
 </html>
