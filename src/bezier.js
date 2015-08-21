@@ -6,7 +6,9 @@
  */
 
 (function() {
+
   function Vector2(x, y) {
+
     this.x = x || 0;
     this.y = y || 0;
   }
@@ -14,6 +16,7 @@
   Vector2.fromObject = function(p) { return new Vector2(p.x, p.y); };
 
   Vector2.prototype = {
+
     constructor: Vector2,
 
     min: function() { return new Vector2(-this.x, -this.y); },
@@ -21,16 +24,19 @@
     add: function(other) {
       return new Vector2(this.x + other.x, this.y + other.y);
     },
+
     addS: function(scalar) {
       return new Vector2(this.x + scalar, this.y + scalar);
     },
 
     sub: function(other) { return this.add(other.min()); },
+
     subS: function(scalar) { return this.addS(-scalar); },
 
     mul: function(other) {
       return new Vector2(this.x * other.x, this.y * other.y);
     },
+
     mulS: function(scalar) {
       return new Vector2(this.x * scalar, this.y * scalar);
     },
@@ -44,6 +50,7 @@
     },
 
     get length2() { return this.dot(this); },
+
     get length() { return Math.sqrt(this.length2); }
   };
 
