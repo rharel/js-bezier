@@ -2,7 +2,7 @@
   "name": "js-bezier",
   "description": "Interactive bezier demo for the browser.",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "homepage": "https://github.com/rharel/js-bezier",
   "author": {
     "name": "Raoul Harel",
