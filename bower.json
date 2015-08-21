@@ -21,7 +21,6 @@
   "dependencies": {
     "jquery": "~2.1.4",
     "bootstrap": "~3.3.5",
-    "tweenjs": "*",
     "two": "~0.4.0",
     "js-bezier": "rharel/js-bezier#~0.1.2",
     "bootstrap-toggle": "~2.2.1",
