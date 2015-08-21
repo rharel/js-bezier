@@ -1,5 +1,8 @@
 # Editor
-.idea
+.idea/
 
 # Node
-node_modules
+node_modules/
+
+# Bower
+bower_components/
