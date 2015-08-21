@@ -5,4 +5,47 @@
 # Package managers
 
 node_modules/
-bower_components/
+bower_components/*
+
+# bootstrap
+
+!bower_components/bootstrap
+bower_components/bootstrap/*
+
+!bower_components/bootstrap/dist/
+
+# bootstrap-toggle
+
+!bower_components/bootstrap-toggle
+bower_components/bootstrap-toggle/*
+
+!bower_components/bootstrap-toggle/css/
+!bower_components/bootstrap-toggle/js/
+
+# jquery
+
+!bower_components/jquery
+bower_components/jquery/*
+
+!bower_components/jquery/dist/
+
+# js-bezier
+
+!bower_components/js-bezier
+bower_components/js-bezier/*
+
+!bower_components/js-bezier/dist/
+
+# bootstrap-slider
+
+!bower_components/seiyria-bootstrap-slider
+bower_components/seiyria-bootstrap-slider/*
+
+!bower_components/seiyria-bootstrap-slider/dist/
+
+# two.js
+
+!bower_components/two
+bower_components/two/*
+
+!bower_components/two/build/
