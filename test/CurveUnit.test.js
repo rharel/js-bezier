@@ -7,7 +7,7 @@
 
 var expect = require('chai').expect;
 
-var Curve = require('../lib/bezier').Curve;
+var Curve = require('../src/bezier').Curve;
 
 describe('curve', function() {
   describe('default constructor', function() {
@@ -38,7 +38,7 @@ describe('curve', function() {
     it('should populate control points from the array', function() {
       for (var i = 0; i < p.length; ++i) {
         var a = p[i];
-        var b = c.getControlPoint(i);
+        var b = c.controlPoint(i);
         expect(b.x).to.be.equal(a.x);
         expect(b.y).to.be.equal(a.y);
       }
@@ -66,8 +66,8 @@ describe('curve', function() {
       expect(c.complexity).to.be.equal(2);
     });
     it('should add new control points in order', function() {
-      var p = c.getControlPoint(0);
-      var q = c.getControlPoint(1);
+      var p = c.controlPoint(0);
+      var q = c.controlPoint(1);
 
       expect(p.x).to.be.equal(a.x);
       expect(p.y).to.be.equal(a.y);
@@ -81,7 +81,7 @@ describe('curve', function() {
       it('should be empty', function() {
         var c = new Curve();
 
-        expect(c.getShellAt(0).length).to.be.equal(0);
+        expect(c.shell(0).length).to.be.equal(0);
       });
     });
 
@@ -91,11 +91,11 @@ describe('curve', function() {
         p = {x: 0, y: 1};
         c = new Curve([p]);
 
-        s_tMin = c.getShellAt(-1);
-        s_tMax = c.getShellAt(2);
-        s_t0 = c.getShellAt(0);
-        s_t1 = c.getShellAt(1);
-        s_t05 = c.getShellAt(0.5);
+        s_tMin = c.shell(-1);
+        s_tMax = c.shell(2);
+        s_t0 = c.shell(0);
+        s_t1 = c.shell(1);
+        s_t05 = c.shell(0.5);
         all_shells = [s_tMin, s_tMax, s_t0, s_t1, s_t05];
       });
 
@@ -126,11 +126,11 @@ describe('curve', function() {
         ];
         c = new Curve(p);
 
-        s_tMin = c.getShellAt(-1);
-        s_tMax = c.getShellAt(2);
-        s_t0 = c.getShellAt(0);
-        s_t1 = c.getShellAt(1);
-        s_t05 = c.getShellAt(0.5);
+        s_tMin = c.shell(-1);
+        s_tMax = c.shell(2);
+        s_t0 = c.shell(0);
+        s_t1 = c.shell(1);
+        s_t05 = c.shell(0.5);
         all_shells = [s_tMin, s_tMax, s_t0, s_t1, s_t05];
       });
 
@@ -284,7 +284,7 @@ describe('curve', function() {
       it('should be empty', function() {
         var c = new Curve();
 
-        expect(c.getSkeleton().length).to.be.equal(0);
+        expect(c.outline().length).to.be.equal(0);
       });
     });
 
@@ -293,7 +293,7 @@ describe('curve', function() {
       beforeEach('create point and curve', function() {
         p = {x: 0, y: 1};
         c = new Curve([p]);
-        s = c.getSkeleton();
+        s = c.outline();
       });
 
       it('should have length one', function() {
@@ -313,11 +313,11 @@ describe('curve', function() {
           {x: 2, y: 3}
         ];
         c = new Curve(p);
-        s = c.getSkeleton(0, 1, 0.01);
+        s = c.outline(0, 1, 0.01);
       });
 
       it('should have length of (1 / precision + 1)', function() {
-          var s = c.getSkeleton(0, 1, 0.01);
+          var s = c.outline(0, 1, 0.01);
           expect(s.length).to.be.equal(101);
       });
     });
@@ -335,7 +335,7 @@ describe('curve', function() {
 
       it('should have length of (1 / precision + 1)',
         function() {
-          var s = c.getSkeleton(0, 1, 0.01);
+          var s = c.outline(0, 1, 0.01);
           expect(s.length).to.be.equal(101);
       });
     });

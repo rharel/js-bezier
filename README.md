@@ -29,7 +29,7 @@ c.at(0.5);  // {x: 0.5, y: 0.5}
 ```javascript
 var controlPoints = [{x: 0, y: 0}, {x: 1, y: 1}];
 var c = new Bezier.Curve(controlPoints);
-var s = c.getSkeleton(t0 = 0, t1 = 1, precision = 0.5);
+var s = c.outline(t0 = 0, t1 = 1, precision = 0.5);
 /**
  * s === [
  * 	{x: 0, y: 0, t: 0},

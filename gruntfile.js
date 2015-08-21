@@ -9,16 +9,16 @@ module.exports = function(grunt) {
 
   config = {
     pkg: grunt.file.readJSON('package.json'),
-    lib_dir: 'lib/',
+    src_dir: 'src/',
     test_dir: 'test/',
     dist_dir: 'dist/',
     demo_dir: 'demo/',
-    source_files: [ '<%= lib_dir %>**/*.js' ],
+    source_files: [ '<%= src_dir %>**/*.js' ],
     test_files: '<%= test_dir %>**/*.test.js',
 
     jshint: {
       all: [
-        '<%= lib_dir %>**/*.js',
+        '<%= src_dir %>**/*.js',
         '<%= demo_dir %>/js/*.js'
       ]
     },
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
 
     copy: {
       release: {
-        src: '<%= lib_dir %>/bezier.js',
+        src: '<%= src_dir %>/bezier.js',
         dest: '<%= dist_dir %>/bezier.js'
       }
     },
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
     uglify: {
       release: {
         files: {
-          '<%= dist_dir %>/bezier.min.js': ['<%= lib_dir %>/bezier.js']
+          '<%= dist_dir %>/bezier.min.js': ['<%= src_dir %>/bezier.js']
         }
       }
     }
