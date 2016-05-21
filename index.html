@@ -9,275 +9,95 @@
 -->
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-  <title>Bezier Curves Interactive Demo</title>
+    <title>Bezier Curves</title>
 
-  <!-- css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/demo.css">
 
-  <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css">
-  <link rel="stylesheet" href="bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css">
+    <script src="bower_components/js-bezier/dist/bezier.js"></script>
+    <script src="js/CanvasView.js"></script>
+    <script src="js/Animation.js"></script>
+    <script>
+        (function () {
 
-  <link rel="stylesheet" href="css/demo.css">
+            function _initialize() {
 
-  <!-- js -->
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+                var points_relative = _spiral(
 
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
-  <script src="bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+                        0.5, 0.5,
+                        0.4, 0.4,
+                        0.1 * Math.PI, 1.9 * Math.PI,
+                        7
+                );
+                var view = _create_view(points_relative, 'curve');
+                view.shell.visible = true;
+                view.shell.colors = [
 
-  <script src="bower_components/two/build/two.min.js"></script>
-
-  <script src="bower_components/js-bezier/dist/bezier.js"></script>
-
-  <script src="js/MouseHandler.js"></script>
-  <script src="js/Layer.js"></script>
-  <script src="js/OutlineLayer.js"></script>
-  <script src="js/ShellLayer.js"></script>
-  <script src="js/AutoPlayer.js"></script>
-  <script src="js/ControlPoint.js"></script>
-  <script src="js/Plot.js"></script>
-  <!--<script src="js/demo2.js"></script>-->
-
-  <script>
-
-    $(document).ready(function() {
-
-      var $canvas = $('#demo-canvas');
-      var plot = new Plot($canvas);
-
-      // autoplay //
-
-      var $autoplayToggle = $('#autoplay-toggle');
-
-      var fps = 30;
-      var cycleDuration = 4;  // seconds
-
-      var autoPlayer = new AutoPlayer(
-        {
-          get: function() { return $timeSlider.slider('getValue'); },
-          set: function(value) {
-            $timeSlider.slider('setValue', value, true, true);
-          }
-        },
-        1000 / fps,
-        1 / (cycleDuration * fps)
-      );
-
-      function updateAutoplay() {
-
-        if ($autoplayToggle.prop('checked')) {
-          autoPlayer.play();
-        }
-        else { autoPlayer.stop(); }
-      }
-
-      $autoplayToggle.change(updateAutoplay);
-
-      // resizing //
-
-      function resize() {
-
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-
-        $canvas.width(w);
-        $canvas.height(h);
-
-        plot.resize(w, h);
-
-        requestAnimationFrame(plot.refresh.bind(plot));
-      }
-
-      $(window).resize(resize);
-
-      // time //
-
-      var $timeSlider = $('#time-slider');
-
-      $timeSlider.slider({
-        min: 0,
-        max: 1,
-        step: 0.001,
-        tooltip_position: 'bottom'
-      });
-
-      $timeSlider.change(function () {
-
-        requestAnimationFrame(function() {
-          plot.t = $timeSlider.slider('getValue');
-        });
-      });
-
-      // mouse interaction //
-
-      (function() {
-
-        var mouse = new MouseHandler($canvas);
-        var selected = null;
-
-        var defaultColor = 'dodgerblue';
-        var hoverColor = 'lightblue';
-
-        var defaultPrecision = 0.01;
-        var dragPrecision = 0.1;
-
-        $canvas.mousemove(function() {
-
-          if (mouse.dragging && selected !== null) {  // drag
-
-            if (plot.precision !== dragPrecision) {
-              plot.precision = dragPrecision;
+                    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+                ];
+                view.shell.size = 1;
+                view.outline.color = 'black';
+                view.outline.precision = 0.025;
+                view.points.color = 'violet';
+                var animation = new Bezier.Animation(24, -1, 0.01);
+                animation.animate(view);
             }
 
-            selected.x += mouse.dx;
-            selected.y += mouse.dy;
+            function _create_view(points_relative, canvas_id) {
 
-            requestAnimationFrame(plot.refresh.bind(plot));
-          }
+                var points_absolute;
+                var curve, canvas, view;
 
-          else {  // hover
+                canvas = document.getElementById(canvas_id);
+                points_absolute = points_relative.map(function(p) {
 
-            var controlPoint = plot.pointCast(mouse.x, mouse.y);
+                    return {
+                        x: p.x * canvas.width,
+                        y: p.y * canvas.height
+                    };
+                });
+                curve = new Bezier.Curve(points_absolute);
+                view = new Bezier.CanvasView(curve, canvas.getContext('2d'));
 
-            if (controlPoint !== null && selected === null) {
-
-              selected = controlPoint;
-              selected.color = hoverColor;
+                return view;
             }
-            else if (controlPoint === null && selected !== null) {
 
-              selected.color = defaultColor;
-              selected = null;
+            function _spiral(x, y, r0, r1, theta0, theta1, n) {
+
+                var dr = (r1 - r0) / n;
+                var dtheta = (theta1 - theta0) / n;
+
+                var r = r0, theta = theta0;
+                var points = [];
+                for (var i = 0; i <= n; ++i) {
+
+                    r = r0 + i * dr;
+                    theta = theta0 + i * dtheta;
+                    points.push({
+
+                        x: x + r * Math.cos(theta),
+                        y: y + r * Math.sin(theta)
+                    });
+                }
+
+                return points;
             }
-          }
 
-        });
-
-        $canvas.mouseup(function() {
-
-          if (plot.precision !== defaultPrecision) {
-            plot.precision = defaultPrecision;
-          }
-        });
-
-        $canvas.click(function() {
-
-          if (selected === null) {
-            plot.add(mouse.x, mouse.y);
-          }
-        });
-
-      })();
-
-      // layer visibility //
-
-      var $pointsToggleButton = $('#points-toggle');
-
-      function updatePointsVisibility() {
-
-        plot.control.visible = $pointsToggleButton.prop('checked');
-        plot.render();
-      }
-
-      updatePointsVisibility();
-
-      $pointsToggleButton.change(updatePointsVisibility);
-
-      var $shellToggleButton = $('#shell-toggle');
-
-      function updateShellVisibility() {
-
-        plot.shell.visible = $shellToggleButton.prop('checked');
-        plot.render();
-      }
-
-      updateShellVisibility();
-
-      $shellToggleButton.change(updateShellVisibility);
-
-      // resetting //
-
-      var $resetButton = $('#reset-button');
-
-      function reset() {
-
-        //autoPlayer.stop();
-        $autoplayToggle.bootstrapToggle('off');
-
-        plot.clear();
-
-        plot.add($canvas.width() * 0.25, $canvas.height() * 0.5);
-        plot.add($canvas.width() * 0.5, $canvas.height() * 0.75);
-        plot.add($canvas.width() * 0.75, $canvas.height() * 0.5);
-
-        $timeSlider.slider('setValue', 1, true, true);
-        plot.t = 1;
-
-        //plot.render();
-      }
-
-      $resetButton.click(reset);
-
-      // kickstart //
-
-      resize();
-      reset();
-
-      updateAutoplay();
-
-    });
-  </script>
+            window.addEventListener('load', _initialize);
+        })();
+    </script>
 </head>
 <body>
 
-  <div id="controls">
-    <div id="main-controls">
-      <button id="reset-button" class="btn btn-primary">
-        Reset
-      </button>
-      <label>
-        <input id="points-toggle"
-               type="checkbox" checked
-               data-toggle="toggle"
-               data-on="Points On" data-off="Points Off">
-      </label>
-      <label>
-        <input id="shell-toggle"
-               type="checkbox" checked
-               data-toggle="toggle"
-               data-on="Shell  On" data-off="Shell Off">
-      </label>
-      <label>
-        <input id="autoplay-toggle"
-               type="checkbox"
-               data-toggle="toggle"
-               data-on="Autoplay On" data-off="Autoplay Off">
-      </label>
+    <div id="content">
+        <h1>
+            <a href="https://www.github.com/rharel/js-bezier">
+                rharel/js-bezier
+            </a>
+        </h1>
 
-      <a class="btn btn-success" href="https://github.com/rharel/js-bezier">View on Github</a>
+        <canvas id="curve" width="400" height="400"></canvas>
     </div>
-
-    <div id="slider-controls">
-      <label class="h3">
-         Time:
-        <input id="time-slider" type="text">
-      </label>
-    </div>
-
-    <div id="instructions" class="alert alert-info">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      Click to add points, drag to change their position.
-    </div>
-  </div>
-
-  <svg id="demo-canvas"></svg>
-
-  <div id="about">
-    Author: Raoul Harel
-  </div>
 </body>
 </html>
