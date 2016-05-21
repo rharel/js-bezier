@@ -19,11 +19,6 @@
     "test"
   ],
   "dependencies": {
-    "jquery": "~2.1.4",
-    "bootstrap": "~3.3.5",
-    "two": "~0.4.0",
-    "js-bezier": "rharel/js-bezier#~0.1.2",
-    "bootstrap-toggle": "~2.2.1",
-    "seiyria-bootstrap-slider": "~5.0.13"
+    "js-bezier": "rharel/js-bezier#~1.0.0"
   }
 }
